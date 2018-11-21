@@ -1,6 +1,6 @@
 {
   "name": "how-to-create-serverless-charts-using-aws-lambda-and-cubejs",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "handler.js",
   "scripts": {
