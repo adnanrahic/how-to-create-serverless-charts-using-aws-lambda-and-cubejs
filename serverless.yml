@@ -1,0 +1,17 @@
+service: generate-cubejs-chart # NOTE: update this with your service name
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: dev
+  region: us-east-1
+
+functions:
+  generate:
+    handler: handler.generate
+    events:
+      - http:
+          path: generate
+          method: get
+
+#      - schedule: rate(10 minutes)
