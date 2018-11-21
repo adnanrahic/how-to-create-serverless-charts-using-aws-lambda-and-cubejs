@@ -2,6 +2,9 @@
 
 const { CanvasRenderService } = require('chartjs-node-canvas')
 const fs = require('fs')
+const { promisify } = require('util')
+const readFileAsync = promisify(fs.readFile)
+const writeFileAsync = promisify(fs.writeFile)
 
 // bug workaround: https://github.com/vmpowerio/chartjs-node/issues/26
 if (global.CanvasGradient === undefined) {
@@ -58,14 +61,16 @@ async function renderChartWithChartJS () {
   return canvasRenderService.renderToBuffer(configuration)
 }
 
-module.exports.generate = async function (event, context, callback) {
+module.exports.generate = async (event) => {
   const buffer = await renderChartWithChartJS()
-  fs.writeFileSync('/tmp/chartjs-lambda.png', buffer)
+  await writeFileAsync('/tmp/chartjs-lambda.png', buffer)
+  const image = await readFileAsync('/tmp/chartjs-lambda.png')
+  console.log('image: ', image)
 
   const response = {
     statusCode: 200,
     body: null
   }
 
-  callback(null, response)
+  return response
 }
