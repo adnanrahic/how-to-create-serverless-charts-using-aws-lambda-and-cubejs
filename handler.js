@@ -55,20 +55,17 @@ async function renderChartWithChartJS () {
 
   console.log('Rendering chart')
   const canvasRenderService = new CanvasRenderService(width, height, chartCallback)
-  const buffer = await canvasRenderService.renderToBuffer(configuration)
-  return buffer
+  return canvasRenderService.renderToBuffer(configuration)
 }
 
-module.exports.generate = async (event) => {
+module.exports.generate = async function (event, context, callback) {
   const buffer = await renderChartWithChartJS()
-  await fs.writeFile('/tmp/chartjs-lambda.png', buffer)
-  const image = await fs.readFile('/tmp/chartjs-lambda.png')
-  console.log(image)
+  fs.writeFileSync('/tmp/chartjs-lambda.png', buffer)
 
   const response = {
     statusCode: 200,
-    body: image
+    body: null
   }
 
-  return response
+  callback(null, response)
 }
