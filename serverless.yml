@@ -1,10 +1,15 @@
 service: generate-cubejs-chart # NOTE: update this with your service name
 
+custom:
+  secrets: ${file(secrets.json)}
+
 provider:
   name: aws
   runtime: nodejs8.10
   stage: dev
   region: us-east-1
+  environment:
+    CUBEJS_TOKEN: ${self:custom.secrets.CUBEJS_TOKEN}
 
 functions:
   generate:
@@ -13,5 +18,14 @@ functions:
       - http:
           path: generate
           method: get
+  hello:
+    handler: handler.hello
+    events:
+      - http:
+          path: /
+          method: get
 
 #      - schedule: rate(10 minutes)
+
+plugins:
+  - serverless-offline
