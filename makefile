@@ -1,10 +1,14 @@
 build:
-	docker build -t generate-cubejs-chart .
-	docker run -d generate-cubejs-chart
+	docker build -t ami .
+	docker run -d ami
 	sleep 3
-	docker cp $$(docker ps -q -f ancestor=generate-cubejs-chart):/root/functions/node_modules ./node_modules
-	docker stop $$(docker ps -q -f ancestor=generate-cubejs-chart)
-	docker rm $$(docker ps -a -q -f ancestor=generate-cubejs-chart)
+	docker cp $$(docker ps -q -f ancestor=ami):/root/functions/node_modules ./node_modules
+	docker stop $$(docker ps -q -f ancestor=ami)
+	docker rm $$(docker ps -a -q -f ancestor=ami)
+
+offline:
+	docker build -t ami -f Dockerfile.offline .
+	docker run -p 3000:3000 ami
 
 .PHONY: clean
 clean:
